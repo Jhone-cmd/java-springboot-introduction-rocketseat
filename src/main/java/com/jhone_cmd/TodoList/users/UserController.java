@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/users")
 public class UserController {
 
-    @PostMapping("")
+    @PostMapping("/")
     public void createUser(@RequestBody UserModel userModel) {
-        System.out.println(userModel.name);
+        System.out.println(userModel.getName());
     }
 
 }
