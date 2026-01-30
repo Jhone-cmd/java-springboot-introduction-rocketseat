@@ -30,7 +30,6 @@ public class TaskController {
     public ResponseEntity<Object> create(@RequestBody TaskModel taskModel, HttpServletRequest request) {
         var idUser = request.getAttribute("idUser");
         taskModel.setIdUser((UUID) idUser);
-        var task = taskRepository.save(taskModel);
 
         var currentDate = LocalDateTime.now();
 
@@ -41,6 +40,8 @@ public class TaskController {
         if (taskModel.getStartAt().isAfter(taskModel.getEndAt())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Task start time must be before end time");
         }
+
+        var task = taskRepository.save(taskModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(task);
     }
