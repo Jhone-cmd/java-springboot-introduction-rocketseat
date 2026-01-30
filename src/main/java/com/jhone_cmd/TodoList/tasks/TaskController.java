@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jhone_cmd.TodoList.Utils.Utils;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,10 +54,15 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@RequestBody TaskModel taskModel, HttpServletRequest request,
             @PathVariable UUID id) {
-        var idUser = request.getAttribute("idUser");
-        taskModel.setIdUser((UUID) idUser);
-        taskModel.setId(id);
-        var task = taskRepository.save(taskModel);
-        return ResponseEntity.status(200).body(task);
+        var task = taskRepository.findById(id).orElse(null);
+
+        if (task == null) {
+            return ResponseEntity.status(404).body("Task not found");
+        }
+
+        Utils.copyNullProperties(taskModel, task);
+
+        var taskUpdated = taskRepository.save(task);
+        return ResponseEntity.status(200).body(taskUpdated);
     }
 }
